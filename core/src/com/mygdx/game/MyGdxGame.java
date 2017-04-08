@@ -9,9 +9,14 @@ import com.mygdx.game.avatar.Avatar;
 import com.mygdx.game.util.Direction;
 
 public class MyGdxGame extends ApplicationAdapter {
+	public static final int WIDTH = 480;
+	public static final int HEIGHT = 800;
+	
 	private ResourceManager rm;
+	
 	SpriteBatch batch;
 	Avatar avatar;
+	
 	float avaX = 0, avaY = 0, avaSpeed = 50.0f;
 
 	@Override
