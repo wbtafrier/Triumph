@@ -10,9 +10,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.avatar.Avatar;
 import com.mygdx.game.util.Direction;
 
-/**
- * Temp main game class
- */
 public class MyGdxGame extends ApplicationAdapter {
 	SpriteBatch batch;
 	Avatar avatar;
