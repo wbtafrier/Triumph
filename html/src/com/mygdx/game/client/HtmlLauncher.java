@@ -7,13 +7,13 @@ import com.mygdx.game.MyGdxGame;
 
 public class HtmlLauncher extends GwtApplication {
 
-        @Override
-        public GwtApplicationConfiguration getConfig () {
-                return new GwtApplicationConfiguration(800, 480);
-        }
+	@Override
+	public GwtApplicationConfiguration getConfig() {
+		return new GwtApplicationConfiguration(800, 480);
+	}
 
-        @Override
-        public ApplicationListener createApplicationListener () {
-                return new MyGdxGame();
-        }
+	@Override
+	public ApplicationListener createApplicationListener() {
+		return new MyGdxGame();
+	}
 }
