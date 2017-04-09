@@ -6,36 +6,28 @@ import com.mygdx.game.util.Direction;
 
 public class Avatar {
 	
-	private Sprite sprite;
+	private Texture texture;
 	private Direction direction;
-	private float x = 0, y = 0;
+	private float x = 0, y = 0, speed = 50f;
 	
 	public Avatar(Texture t) {
-		this(new Sprite(t));
-	}
-	
-	public Avatar(Sprite s) {
-		this.setSprite(s);
+		this.texture = t;
 	}
 	
 	public void setDirection(Direction dir) {
 		this.direction = dir;
 	}
 	
-	public void setSprite(Texture text) {
-		this.sprite = new Sprite(text);
-	}
-	
-	public void setSprite(Sprite spr) {
-		this.sprite = spr;
+	public void setTexture(Texture text) {
+		this.texture = text;
 	}
 	
 	public Direction getDirection() {
 		return this.direction;
 	}
 	
-	public Sprite getSprite() {
-		return this.sprite;
+	public Texture getTexture() {
+		return this.texture;
 	}
 	
 	public void setX(float x) {
@@ -57,5 +49,13 @@ public class Avatar {
 	
 	public float getY() {
 		return this.y;
+	}
+	
+	public void setSpeed(float speed) {
+		this.speed = speed;
+	}
+	
+	public float getSpeed() {
+		return this.speed;
 	}
 }

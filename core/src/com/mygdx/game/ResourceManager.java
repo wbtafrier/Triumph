@@ -7,20 +7,20 @@ import com.badlogic.gdx.graphics.Texture;
 public class ResourceManager {
 	private static ArrayList<Texture> textureList = new ArrayList<Texture>();
 	
-	public Texture back;
-	public Texture backWalk1;
-	public Texture backWalk2;
-	public Texture front;
-	public Texture frontWalk1;
-	public Texture frontWalk2;
-	public Texture left;
-	public Texture leftWalk1;
-	public Texture leftWalk2;
-	public Texture right;
-	public Texture rightWalk1;
-	public Texture rightWalk2;
+	public static Texture back;
+	public static Texture backWalk1;
+	public static Texture backWalk2;
+	public static Texture front;
+	public static Texture frontWalk1;
+	public static Texture frontWalk2;
+	public static Texture left;
+	public static Texture leftWalk1;
+	public static Texture leftWalk2;
+	public static Texture right;
+	public static Texture rightWalk1;
+	public static Texture rightWalk2;
 	
-	public ResourceManager() {
+	public static void initializeTextures() {
 		textureList.add(back = new Texture("back.png"));
 		textureList.add(backWalk1 = new Texture("backWalk1.png"));
 		textureList.add(backWalk2 = new Texture("backWalk2.png"));
@@ -35,7 +35,7 @@ public class ResourceManager {
 		textureList.add(rightWalk2 = new Texture("rightWalk2.png"));
 	}
 	
-	public ArrayList<Texture> getTextureList() {
+	public static ArrayList<Texture> getTextureList() {
 		return textureList;
 	}
 }
