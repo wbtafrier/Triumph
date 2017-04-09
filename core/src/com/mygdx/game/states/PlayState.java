@@ -2,17 +2,18 @@ package com.mygdx.game.states;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mygdx.game.AnimationManager;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.ResourceManager;
 import com.mygdx.game.avatar.Avatar;
 import com.mygdx.game.util.Direction;
 
 public class PlayState extends State {
-	// private Bird bird;
 	Avatar avatar;
-
-	float avaX, avaY, dt;
+	Texture currentWater;
+	float avaX, avaY, dt, time = 0;
 
 	public PlayState(GameStateManager gsm) {
 		super(gsm);
@@ -20,44 +21,56 @@ public class PlayState extends State {
 		avatar = new Avatar(ResourceManager.front);
 		avatar.setX(cam.position.x * 2);
 		avatar.setY(cam.position.y * 2);
+		currentWater = ResourceManager.water1;
 	}
 
 	@Override
 	protected void handleInput() {
+		boolean moving = false;
+		
+		if (Gdx.input.isKeyPressed(Keys.ESCAPE)) {
+			gsm.set(new MenuState(gsm));
+			return;
+		}
+		
 		if (Gdx.input.isKeyPressed(Keys.DPAD_LEFT) || Gdx.input.isKeyPressed(Keys.A)) {
 			avatar.setDirection(Direction.LEFT);
-			avatar.setTexture(ResourceManager.left);
 			avaX -= dt * avatar.getSpeed();
+			moving = true;
 		}
 		if (Gdx.input.isKeyPressed(Keys.DPAD_RIGHT) || Gdx.input.isKeyPressed(Keys.D)) {
 			avatar.setDirection(Direction.RIGHT);
-			avatar.setTexture(ResourceManager.right);
 			avaX += dt * avatar.getSpeed();
+			moving = true;
 		}
 		if (Gdx.input.isKeyPressed(Keys.DPAD_UP) || Gdx.input.isKeyPressed(Keys.W)) {
 			avatar.setDirection(Direction.UP);
-			avatar.setTexture(ResourceManager.back);
 			avaY += dt * avatar.getSpeed();
+			moving = true;
 		}
 		if (Gdx.input.isKeyPressed(Keys.DPAD_DOWN) || Gdx.input.isKeyPressed(Keys.S)) {
 			avatar.setDirection(Direction.DOWN);
-			avatar.setTexture(ResourceManager.front);
 			avaY -= dt * avatar.getSpeed();
+			moving = true;
 		}
+		avatar.setMoving(moving);
 	}
 
 	@Override
 	public void update(float dt) {
 		this.dt = dt;
+		this.time += dt;
 		
 		if (avatar != null) {
 			this.avaX = this.avatar.getX();
 			this.avaY = this.avatar.getY();
 			handleInput();
 			avatar.setCoords(avaX, avaY);
+			avatar.update(dt);
 			cam.translate(avaX - cam.position.x, avaY - cam.position.y);
 		}
 		
+		this.currentWater = AnimationManager.waterFlow.getKeyFrame(time, true);
 		cam.update();
 	}
 
@@ -65,7 +78,7 @@ public class PlayState extends State {
 	public void render(SpriteBatch sb) {
 		sb.setProjectionMatrix(cam.combined);
 		sb.begin();
-		sb.draw(ResourceManager.water1, 0, 0);
+		sb.draw(this.currentWater, 0, 0);
 		sb.draw(ResourceManager.testIsland, (ResourceManager.water1.getWidth() / 2) - (ResourceManager.testIsland.getWidth() / 2),
 				(ResourceManager.water1.getHeight() / 2) - (ResourceManager.testIsland.getHeight() / 2));
 		sb.draw(avatar.getTexture(), avatar.getX(), avatar.getY());
@@ -74,6 +87,6 @@ public class PlayState extends State {
 	
 	@Override
 	public void resize(int width, int height) {
-		cam.setToOrtho(false, width / 2, height / 2);
+		viewport.update(width, height);
 	}
 }

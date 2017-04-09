@@ -23,6 +23,7 @@ public class ResourceManager {
 	public static Texture water1;
 	public static Texture water2;
 	public static Texture water3;
+	public static Texture mainMenu;
 	
 	public static void initializeTextures() {
 		textureList.add(back = new Texture("back.png"));
@@ -41,6 +42,7 @@ public class ResourceManager {
 		textureList.add(water1 = new Texture("water1.png"));
 		textureList.add(water2 = new Texture("water2.png"));
 		textureList.add(water3 = new Texture("water3.png"));
+		textureList.add(mainMenu = new Texture("mainMenu.png"));
 	}
 	
 	public static ArrayList<Texture> getTextureList() {

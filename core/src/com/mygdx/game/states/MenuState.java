@@ -3,12 +3,13 @@ package com.mygdx.game.states;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.MyGdxGame;
+import com.mygdx.game.ResourceManager;
 
 public class MenuState extends State {
 
 	public MenuState(GameStateManager gsm) {
 		super(gsm);
-		cam.setToOrtho(false, MyGdxGame.WIDTH / 2, MyGdxGame.HEIGHT / 2);
+		cam.setToOrtho(false, MyGdxGame.WIDTH, MyGdxGame.HEIGHT);
 	}
 
 	@Override
@@ -27,14 +28,13 @@ public class MenuState extends State {
 	public void render(SpriteBatch sb) {
 		sb.setProjectionMatrix(cam.combined);
         sb.begin();
-//        sb.draw(ResourceManager.testIsland, 0, 0);
-//        sb.draw(ResourceManager.playBtn, cam.position.x - playBtn.getWidth() / 2, cam.position.y);
+        sb.draw(ResourceManager.mainMenu, 0, 0);
         sb.end();
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		cam.setToOrtho(false, width / 2, height / 2);
+		cam.setToOrtho(false, width, height);
 	}
 
 }
