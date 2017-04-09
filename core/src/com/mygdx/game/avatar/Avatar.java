@@ -8,6 +8,7 @@ public class Avatar {
 	
 	private Sprite sprite;
 	private Direction direction;
+	private float x = 0, y = 0;
 	
 	public Avatar(Texture t) {
 		this(new Sprite(t));
@@ -35,5 +36,26 @@ public class Avatar {
 	
 	public Sprite getSprite() {
 		return this.sprite;
+	}
+	
+	public void setX(float x) {
+		this.x = x;
+	}
+	
+	public void setY(float y) {
+		this.y = y;
+	}
+	
+	public void setCoords(float x, float y) {
+		this.x = x;
+		this.y = y;
+	}
+	
+	public float getX() {
+		return this.x;
+	}
+	
+	public float getY() {
+		return this.y;
 	}
 }
