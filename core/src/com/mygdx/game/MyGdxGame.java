@@ -4,15 +4,13 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.mygdx.game.avatar.Avatar;
 import com.mygdx.game.states.GameStateManager;
 import com.mygdx.game.states.MenuState;
-import com.mygdx.game.states.PlayState;
 import com.mygdx.game.states.State;
 
 public class MyGdxGame extends ApplicationAdapter {
-	public static final int WIDTH = 480;
-	public static final int HEIGHT = 800;
+	public static final int WIDTH = 800;
+	public static final int HEIGHT = 600;
 	
 	public GameStateManager gsm;
 	public State currentState;
@@ -33,6 +31,11 @@ public class MyGdxGame extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         gsm.update(Gdx.graphics.getDeltaTime());
         gsm.render(batch);
+	}
+	
+	@Override
+	public void resize(int width, int height) {
+		
 	}
 
 	@Override

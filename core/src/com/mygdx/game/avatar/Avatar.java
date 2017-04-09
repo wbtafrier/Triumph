@@ -1,14 +1,13 @@
 package com.mygdx.game.avatar;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.mygdx.game.util.Direction;
 
 public class Avatar {
 	
 	private Texture texture;
-	private Direction direction;
-	private float x = 0, y = 0, speed = 50f;
+	private Direction direction = Direction.DOWN;
+	private float x = 0, y = 0, speed = 60f;
 	
 	public Avatar(Texture t) {
 		this.texture = t;

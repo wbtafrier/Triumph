@@ -19,6 +19,10 @@ public class ResourceManager {
 	public static Texture right;
 	public static Texture rightWalk1;
 	public static Texture rightWalk2;
+	public static Texture testIsland;
+	public static Texture water1;
+	public static Texture water2;
+	public static Texture water3;
 	
 	public static void initializeTextures() {
 		textureList.add(back = new Texture("back.png"));
@@ -33,6 +37,10 @@ public class ResourceManager {
 		textureList.add(right = new Texture("right.png"));
 		textureList.add(rightWalk1 = new Texture("rightWalk1.png"));
 		textureList.add(rightWalk2 = new Texture("rightWalk2.png"));
+		textureList.add(testIsland = new Texture("testIsland.png"));
+		textureList.add(water1 = new Texture("water1.png"));
+		textureList.add(water2 = new Texture("water2.png"));
+		textureList.add(water3 = new Texture("water3.png"));
 	}
 	
 	public static ArrayList<Texture> getTextureList() {

@@ -27,9 +27,14 @@ public class MenuState extends State {
 	public void render(SpriteBatch sb) {
 		sb.setProjectionMatrix(cam.combined);
         sb.begin();
-//        sb.draw(ResourceManager.background, 0, 0);
+//        sb.draw(ResourceManager.testIsland, 0, 0);
 //        sb.draw(ResourceManager.playBtn, cam.position.x - playBtn.getWidth() / 2, cam.position.y);
         sb.end();
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		cam.setToOrtho(false, width / 2, height / 2);
 	}
 
 }
