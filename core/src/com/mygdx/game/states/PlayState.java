@@ -78,7 +78,7 @@ public class PlayState extends State {
 	public void render(SpriteBatch sb) {
 		sb.setProjectionMatrix(cam.combined);
 		sb.begin();
-		sb.draw(this.currentWater, 0, 0);
+		sb.draw(this.currentWater , -100, -100, 1000,1000);
 		sb.draw(ResourceManager.testIsland, (ResourceManager.water1.getWidth() / 2) - (ResourceManager.testIsland.getWidth() / 2),
 				(ResourceManager.water1.getHeight() / 2) - (ResourceManager.testIsland.getHeight() / 2));
 		sb.draw(avatar.getTexture(), avatar.getX(), avatar.getY());
