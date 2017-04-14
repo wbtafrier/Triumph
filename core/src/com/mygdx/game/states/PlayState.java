@@ -65,8 +65,10 @@ public class PlayState extends State {
 			this.avaX = this.avatar.getX();
 			this.avaY = this.avatar.getY();
 			handleInput();
-			if (avaX < 0) avaX = 0;
-			if (avaY < 0) avaY = 0;
+			if (avaX < 170) avaX = 170;
+			if (avaY < 110) avaY = 110;
+			if (avaX > 590) avaX = 590;
+			if (avaY > 440) avaY = 440;
 			avatar.setCoords(avaX, avaY);
 			avatar.update(dt);
 			cam.translate(avaX - cam.position.x, avaY - cam.position.y);
