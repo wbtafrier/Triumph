@@ -14,13 +14,16 @@ public class PlayState extends State {
 	Avatar avatar;
 	Texture currentWater;
 	float avaX, avaY, dt, time = 0;
+	final float avaStartX, avaStartY;
 
 	public PlayState(GameStateManager gsm) {
 		super(gsm);
 		cam.setToOrtho(false, MyGdxGame.WIDTH / 2, MyGdxGame.HEIGHT / 2);
 		avatar = new Avatar(ResourceManager.front);
-		avatar.setX(cam.position.x * 2);
-		avatar.setY(cam.position.y * 2);
+		avaStartX = cam.position.x * 2;
+		avatar.setX(avaStartX);
+		avaStartY = cam.position.y * 2;
+		avatar.setY(avaStartY);
 		currentWater = ResourceManager.water1;
 	}
 
