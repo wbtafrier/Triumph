@@ -65,6 +65,8 @@ public class PlayState extends State {
 			this.avaX = this.avatar.getX();
 			this.avaY = this.avatar.getY();
 			handleInput();
+			if (avaX < 0) avaX = 0;
+			if (avaY < 0) avaY = 0;
 			avatar.setCoords(avaX, avaY);
 			avatar.update(dt);
 			cam.translate(avaX - cam.position.x, avaY - cam.position.y);
@@ -78,7 +80,7 @@ public class PlayState extends State {
 	public void render(SpriteBatch sb) {
 		sb.setProjectionMatrix(cam.combined);
 		sb.begin();
-		sb.draw(this.currentWater , -100, -100, 1000,1000);
+		sb.draw(this.currentWater , -100, -100, 1000, 1000);
 		sb.draw(ResourceManager.testIsland, (ResourceManager.water1.getWidth() / 2) - (ResourceManager.testIsland.getWidth() / 2),
 				(ResourceManager.water1.getHeight() / 2) - (ResourceManager.testIsland.getHeight() / 2));
 		sb.draw(avatar.getTexture(), avatar.getX(), avatar.getY());
