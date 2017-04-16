@@ -3,6 +3,7 @@ package com.mygdx.game.states;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.AnimationManager;
 import com.mygdx.game.MyGdxGame;
@@ -15,14 +16,18 @@ public class PlayState extends State {
 	Texture currentWater;
 	float avaX, avaY, dt, time = 0;
 	final float avaStartX, avaStartY, avaFallSpeed = 1.25f;
+	final float waterWidth = ResourceManager.water1.getWidth() * 1.15f,
+			waterHeight = ResourceManager.water1.getHeight() * 1.25f,
+			waterX = -((waterWidth - ResourceManager.testIsland.getWidth()) / 2),
+			waterY = -((waterHeight - ResourceManager.testIsland.getHeight()) / 2);
 
 	public PlayState(GameStateManager gsm) {
 		super(gsm);
-		cam.setToOrtho(false, MyGdxGame.WIDTH / 2, MyGdxGame.HEIGHT / 2);
+		cam.setToOrtho(false, MyGdxGame.WIDTH / 3, MyGdxGame.HEIGHT / 3);
 		avatar = new Avatar(ResourceManager.front);
-		avaStartX = cam.position.x * 2;
+		avaStartX = ResourceManager.testIsland.getWidth() / 2;
 		avatar.setX(avaStartX);
-		avaStartY = cam.position.y * 2;
+		avaStartY = ResourceManager.testIsland.getHeight() / 2;
 		avatar.setY(avaStartY);
 		currentWater = ResourceManager.water1;
 	}
@@ -75,41 +80,41 @@ public class PlayState extends State {
 			this.avaX = this.avatar.getX();
 			this.avaY = this.avatar.getY();
 			handleInput();
-			if (avaX < 170) {
+			if (avaX < 22) {
 				avaX -= avaFallSpeed;
-				if (avaX < 120) {
-					avaX = 380;
-					avaY = 290;
+				if (avaX < -18) {
+					avaX = avaStartX;
+					avaY = avaStartY;
 				}
 				else {
 					falling = true;
 				}
 			}
-			if (avaY < 110) {
+			if (avaY < 40) {
 				avaY -= avaFallSpeed;
-				if (avaY < 80) {
-					avaX = 380;
-					avaY = 290;
+				if (avaY < -15) {
+					avaX = avaStartX;
+					avaY = avaStartY;
 				}
 				else {
 					falling = true;
 				}
 			}
-			if (avaX > 590) {
+			if (avaX > 450) {
 				avaX += avaFallSpeed;
-				if (avaX > 630) {
-					avaX = 380;
-					avaY = 290;
+				if (avaX > 490) {
+					avaX = avaStartX;
+					avaY = avaStartY;
 				}
 				else {
 					falling = true;
 				}
 			}
-			if (avaY > 440) {
+			if (avaY > 370) {
 				avaY += avaFallSpeed;
-				if (avaY > 470) {
-					avaX = 380;
-					avaY = 290;
+				if (avaY > 405) {
+					avaX = avaStartX;
+					avaY = avaStartY;
 				}
 				else {
 					falling = true;
@@ -129,10 +134,18 @@ public class PlayState extends State {
 	public void render(SpriteBatch sb) {
 		sb.setProjectionMatrix(cam.combined);
 		sb.begin();
-		sb.draw(this.currentWater , -100, -100, 1000, 1000);
-		sb.draw(ResourceManager.testIsland, (ResourceManager.water1.getWidth() / 2) - (ResourceManager.testIsland.getWidth() / 2),
-				(ResourceManager.water1.getHeight() / 2) - (ResourceManager.testIsland.getHeight() / 2));
+		sb.draw(this.currentWater, waterX, waterY, waterWidth, waterHeight);
+		sb.draw(ResourceManager.testIsland, 0, 0);
 		sb.draw(avatar.getTexture(), avatar.getX(), avatar.getY());
+		
+		BitmapFont font = new BitmapFont();
+		String x = Float.toString(avatar.getX());
+		String truncX = x.substring(0, x.indexOf('.'));
+		String y = Float.toString(avatar.getY());
+		String truncY = y.substring(0, y.indexOf('.'));
+		font.draw(sb, truncX + ", " + truncY, cam.position.x - (cam.viewportWidth / 2) + 10,
+				cam.position.y - (cam.viewportHeight / 2) + 30);
+		
 		sb.end();
 	}
 	
