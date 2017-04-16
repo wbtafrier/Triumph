@@ -19,23 +19,31 @@ public class Avatar {
 	public void update(float dt) {
 		this.time += dt;
 		if (this.direction.equals(Direction.LEFT)) {
-			if (this.moving)
+			if (this.moving && !this.falling)
 				this.texture = AnimationManager.leftWalk.getKeyFrame(this.time, true);
+			else if (this.falling)
+				this.texture = ResourceManager.frontFall;
 			else
 				this.texture = ResourceManager.left;
 		} else if (this.direction.equals(Direction.RIGHT)) {
-			if (this.moving)
+			if (this.moving && !this.falling)
 				this.texture = AnimationManager.rightWalk.getKeyFrame(this.time, true);
+			else if (this.falling)
+				this.texture = ResourceManager.backFall;
 			else
 				this.texture = ResourceManager.right;
 		} else if (this.direction.equals(Direction.DOWN)) {
-			if (this.moving)
+			if (this.moving && !this.falling)
 				this.texture = AnimationManager.frontWalk.getKeyFrame(this.time, true);
+			else if (this.falling)
+				this.texture = ResourceManager.frontFall;
 			else
 				this.texture = ResourceManager.front;
 		} else if (this.direction.equals(Direction.UP)) {
-			if (this.moving)
+			if (this.moving && !this.falling)
 				this.texture = AnimationManager.backWalk.getKeyFrame(this.time, true);
+			else if (this.falling)
+				this.texture = ResourceManager.backFall;
 			else
 				this.texture = ResourceManager.back;
 		}
