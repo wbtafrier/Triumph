@@ -14,7 +14,7 @@ public class PlayState extends State {
 	Avatar avatar;
 	Texture currentWater;
 	float avaX, avaY, dt, time = 0;
-	final float avaStartX, avaStartY;
+	final float avaStartX, avaStartY, avaFallSpeed = 1.25f;
 
 	public PlayState(GameStateManager gsm) {
 		super(gsm);
@@ -69,28 +69,28 @@ public class PlayState extends State {
 			this.avaY = this.avatar.getY();
 			handleInput();
 			if (avaX < 170) {
-				avaX--; //avaX = 170;
+				avaX -= avaFallSpeed;
 				if(avaX < 120) {
 					avaX = 380;
 					avaY = 290;
 				}
 			}
 			if (avaY < 110) {
-				avaY--; //avaY = 110;
+				avaY -= avaFallSpeed;
 				if(avaY < 70) {
 					avaX = 380;
 					avaY = 290;
 				}
 			}
 			if (avaX > 590)  {
-				avaX++; //avaX = 590;
+				avaX += avaFallSpeed;
 				if(avaX > 630) {
 					avaX = 380;
 					avaY = 290;
 				}
 			}
 			if (avaY > 440) {
-				avaY++; //avaY = 440;
+				avaY += avaFallSpeed;
 				if(avaY > 470) {
 					avaX = 380;
 					avaY = 290;
