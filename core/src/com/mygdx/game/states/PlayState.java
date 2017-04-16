@@ -87,7 +87,7 @@ public class PlayState extends State {
 			}
 			if (avaY < 110) {
 				avaY -= avaFallSpeed;
-				if (avaY < 70) {
+				if (avaY < 80) {
 					avaX = 380;
 					avaY = 290;
 				}
