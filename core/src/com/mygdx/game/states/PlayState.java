@@ -139,11 +139,9 @@ public class PlayState extends State {
 		sb.draw(avatar.getTexture(), avatar.getX(), avatar.getY());
 		
 		BitmapFont font = new BitmapFont();
-		String x = Float.toString(avatar.getX());
-		String truncX = x.substring(0, x.indexOf('.'));
-		String y = Float.toString(avatar.getY());
-		String truncY = y.substring(0, y.indexOf('.'));
-		font.draw(sb, truncX + ", " + truncY, cam.position.x - (cam.viewportWidth / 2) + 10,
+		String x = Integer.toString((int)avatar.getX());
+		String y = Integer.toString((int)avatar.getY());
+		font.draw(sb, x + ", " + y, cam.position.x - (cam.viewportWidth / 2) + 10,
 				cam.position.y - (cam.viewportHeight / 2) + 30);
 		
 		sb.end();
