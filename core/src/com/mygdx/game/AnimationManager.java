@@ -24,7 +24,8 @@ public class AnimationManager {
 		Texture[] front = new Texture[] { ResourceManager.front, ResourceManager.frontWalk1, ResourceManager.frontWalk2 };
 		frontWalk = new Animation<Texture>(0.1f, front);
 		
-		Texture[] water = new Texture[] { ResourceManager.water1, ResourceManager.water2, ResourceManager.water3 };
+		Texture[] water = new Texture[] { ResourceManager.water1, ResourceManager.water2, ResourceManager.water3,
+											ResourceManager.water2 };
 		waterFlow = new Animation<Texture>(0.5f, water);
 	}
 }

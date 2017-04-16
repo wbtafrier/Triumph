@@ -10,7 +10,7 @@ public class Avatar {
 	private Texture texture;
 	private Direction direction = Direction.DOWN;
 	private float x = 0, y = 0, time = 0f, speed = 60f;
-	private boolean moving = false;
+	private boolean moving = false, falling = false;
 	
 	public Avatar(Texture t) {
 		this.texture = t;
@@ -92,5 +92,13 @@ public class Avatar {
 	
 	public boolean isMoving() {
 		return this.moving;
+	}
+	
+	public void setFalling(boolean falling) {
+		this.falling = falling;
+	}
+	
+	public boolean isFalling() {
+		return this.falling;
 	}
 }

@@ -36,24 +36,29 @@ public class PlayState extends State {
 			return;
 		}
 		
-		if (Gdx.input.isKeyPressed(Keys.DPAD_LEFT) || Gdx.input.isKeyPressed(Keys.A)) {
-			avatar.setDirection(Direction.LEFT);
-			avaX -= dt * avatar.getSpeed();
-			moving = true;
+		if (!avatar.isFalling()) {
+			if (Gdx.input.isKeyPressed(Keys.DPAD_LEFT) || Gdx.input.isKeyPressed(Keys.A)) {
+				avatar.setDirection(Direction.LEFT);
+				avaX -= dt * avatar.getSpeed();
+				moving = true;
+			}
+			if (Gdx.input.isKeyPressed(Keys.DPAD_RIGHT) || Gdx.input.isKeyPressed(Keys.D)) {
+				avatar.setDirection(Direction.RIGHT);
+				avaX += dt * avatar.getSpeed();
+				moving = true;
+			}
+			if (Gdx.input.isKeyPressed(Keys.DPAD_UP) || Gdx.input.isKeyPressed(Keys.W)) {
+				avatar.setDirection(Direction.UP);
+				avaY += dt * avatar.getSpeed();
+				moving = true;
+			}
+			if (Gdx.input.isKeyPressed(Keys.DPAD_DOWN) || Gdx.input.isKeyPressed(Keys.S)) {
+				avatar.setDirection(Direction.DOWN);
+				avaY -= dt * avatar.getSpeed();
+				moving = true;
+			}
 		}
-		if (Gdx.input.isKeyPressed(Keys.DPAD_RIGHT) || Gdx.input.isKeyPressed(Keys.D)) {
-			avatar.setDirection(Direction.RIGHT);
-			avaX += dt * avatar.getSpeed();
-			moving = true;
-		}
-		if (Gdx.input.isKeyPressed(Keys.DPAD_UP) || Gdx.input.isKeyPressed(Keys.W)) {
-			avatar.setDirection(Direction.UP);
-			avaY += dt * avatar.getSpeed();
-			moving = true;
-		}
-		if (Gdx.input.isKeyPressed(Keys.DPAD_DOWN) || Gdx.input.isKeyPressed(Keys.S)) {
-			avatar.setDirection(Direction.DOWN);
-			avaY -= dt * avatar.getSpeed();
+		else {
 			moving = true;
 		}
 		avatar.setMoving(moving);
@@ -61,6 +66,8 @@ public class PlayState extends State {
 
 	@Override
 	public void update(float dt) {
+		boolean falling = false;
+		
 		this.dt = dt;
 		this.time += dt;
 		
@@ -70,37 +77,50 @@ public class PlayState extends State {
 			handleInput();
 			if (avaX < 170) {
 				avaX -= avaFallSpeed;
-				if(avaX < 120) {
+				if (avaX < 120) {
 					avaX = 380;
 					avaY = 290;
+				}
+				else {
+					falling = true;
 				}
 			}
 			if (avaY < 110) {
 				avaY -= avaFallSpeed;
-				if(avaY < 70) {
+				if (avaY < 70) {
 					avaX = 380;
 					avaY = 290;
 				}
+				else {
+					falling = true;
+				}
 			}
-			if (avaX > 590)  {
+			if (avaX > 590) {
 				avaX += avaFallSpeed;
-				if(avaX > 630) {
+				if (avaX > 630) {
 					avaX = 380;
 					avaY = 290;
+				}
+				else {
+					falling = true;
 				}
 			}
 			if (avaY > 440) {
 				avaY += avaFallSpeed;
-				if(avaY > 470) {
+				if (avaY > 470) {
 					avaX = 380;
 					avaY = 290;
 				}
+				else {
+					falling = true;
+				}
 			}
 			avatar.setCoords(avaX, avaY);
+			this.avatar.setFalling(falling);
 			avatar.update(dt);
 			cam.translate(avaX - cam.position.x, avaY - cam.position.y);
 		}
-		
+
 		this.currentWater = AnimationManager.waterFlow.getKeyFrame(time, true);
 		cam.update();
 	}
