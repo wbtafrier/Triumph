@@ -22,14 +22,14 @@ public class Avatar {
 			if (this.moving && !this.falling)
 				this.texture = AnimationManager.leftWalk.getKeyFrame(this.time, true);
 			else if (this.falling)
-				this.texture = ResourceManager.frontFall;
+				this.texture = ResourceManager.leftFall;
 			else
 				this.texture = ResourceManager.left;
 		} else if (this.direction.equals(Direction.RIGHT)) {
 			if (this.moving && !this.falling)
 				this.texture = AnimationManager.rightWalk.getKeyFrame(this.time, true);
 			else if (this.falling)
-				this.texture = ResourceManager.backFall;
+				this.texture = ResourceManager.rightFall;
 			else
 				this.texture = ResourceManager.right;
 		} else if (this.direction.equals(Direction.DOWN)) {

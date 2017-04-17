@@ -26,6 +26,8 @@ public class ResourceManager {
 	public static Texture mainMenu;
 	public static Texture backFall;
 	public static Texture frontFall;
+	public static Texture leftFall;
+	public static Texture rightFall;
 	
 	public static void initializeTextures() {
 		textureList.add(back = new Texture("back.png"));
@@ -47,6 +49,8 @@ public class ResourceManager {
 		textureList.add(mainMenu = new Texture("mainMenu.png"));
 		textureList.add(backFall = new Texture("backFall.png"));
 		textureList.add(frontFall = new Texture("frontFall.png"));
+		textureList.add(leftFall = new Texture("leftFall.png"));
+		textureList.add(rightFall = new Texture("rightFall.png"));
 	}
 	
 	public static ArrayList<Texture> getTextureList() {

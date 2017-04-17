@@ -19,7 +19,9 @@ public class PlayState extends State {
 	final float waterWidth = ResourceManager.water1.getWidth() * 1.15f,
 			waterHeight = ResourceManager.water1.getHeight() * 1.25f,
 			waterX = -((waterWidth - ResourceManager.testIsland.getWidth()) / 2),
-			waterY = -((waterHeight - ResourceManager.testIsland.getHeight()) / 2);
+			waterY = -((waterHeight - ResourceManager.testIsland.getHeight()) / 2),
+			avaFallWidth = ResourceManager.frontFall.getWidth(),
+			avaFallHeight = ResourceManager.frontFall.getHeight();
 
 	public PlayState(GameStateManager gsm) {
 		super(gsm);
@@ -136,7 +138,13 @@ public class PlayState extends State {
 		sb.begin();
 		sb.draw(this.currentWater, waterX, waterY, waterWidth, waterHeight);
 		sb.draw(ResourceManager.testIsland, 0, 0);
-		sb.draw(avatar.getTexture(), avatar.getX(), avatar.getY());
+		
+		if (!avatar.isFalling()) {
+			sb.draw(avatar.getTexture(), avatar.getX(), avatar.getY());
+		}
+		else {
+			sb.draw(avatar.getTexture(), avatar.getX(), avatar.getY(), avaFallWidth, avaFallHeight);
+		}
 		
 		BitmapFont font = new BitmapFont();
 		String x = Integer.toString((int)avatar.getX());
