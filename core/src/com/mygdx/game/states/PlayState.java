@@ -139,11 +139,12 @@ public class PlayState extends State {
 		sb.draw(this.currentWater, waterX, waterY, waterWidth, waterHeight);
 		sb.draw(ResourceManager.testIsland, 0, 0);
 		
-		if (!avatar.isFalling()) {
-			sb.draw(avatar.getTexture(), avatar.getX(), avatar.getY());
+		if (avatar.isFalling() && (avatar.getDirection() == Direction.LEFT || avatar.getDirection() == Direction.RIGHT)) {
+			sb.draw(avatar.getTexture(), avatar.getX(), avatar.getY(), avaFallWidth, avaFallHeight, 
+					0, 0, avatar.getTexture().getWidth(), avatar.getTexture().getHeight(), true, false);
 		}
 		else {
-			sb.draw(avatar.getTexture(), avatar.getX(), avatar.getY(), avaFallWidth, avaFallHeight);
+			sb.draw(avatar.getTexture(), avatar.getX(), avatar.getY());
 		}
 		
 		BitmapFont font = new BitmapFont();
