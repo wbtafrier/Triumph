@@ -9,7 +9,7 @@ public class Avatar {
 	
 	private Texture texture;
 	private Direction direction = Direction.DOWN;
-	private float x = 0, y = 0, time = 0f, speed = 60f;
+	private float x = 0, y = 0, rotation = 0, time = 0f, speed = 60f;
 	private boolean moving = false, falling = false;
 	
 	public Avatar(Texture t) {
@@ -84,6 +84,14 @@ public class Avatar {
 	
 	public float getY() {
 		return this.y;
+	}
+	
+	public void setRotation(float rotation) {
+		this.rotation = rotation;
+	}
+	
+	public float getRotation() {
+		return this.rotation;
 	}
 	
 	public void setSpeed(float speed) {

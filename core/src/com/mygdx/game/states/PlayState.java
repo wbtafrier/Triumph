@@ -14,7 +14,7 @@ import com.mygdx.game.util.Direction;
 public class PlayState extends State {
 	Avatar avatar;
 	Texture currentWater;
-	float avaX, avaY, dt, time = 0;
+	float avaX, avaY, avaRotation, dt, time = 0;
 	final float avaStartX, avaStartY, avaFallSpeed = 1.25f;
 	final float waterWidth = ResourceManager.water1.getWidth() * 1.15f,
 			waterHeight = ResourceManager.water1.getHeight() * 1.25f,
@@ -81,14 +81,24 @@ public class PlayState extends State {
 		if (avatar != null) {
 			this.avaX = this.avatar.getX();
 			this.avaY = this.avatar.getY();
+			this.avaRotation = this.avatar.getRotation();
 			handleInput();
 			if (avaX < 22) {
+				this.avatar.setDirection(Direction.LEFT);
 				avaX -= avaFallSpeed;
-				if (avaX < -18) {
+				avaY -= avaFallSpeed;
+				avaRotation += 0.5;
+				
+				if (avaX < -18 && avaX > -38) {
+					//generate splash
+				}
+				
+				if (avaX < -38) {
 					avaX = avaStartX;
 					avaY = avaStartY;
+					avaRotation = 0;
 				}
-				else {
+				else if (!falling) {
 					falling = true;
 				}
 			}
@@ -98,17 +108,26 @@ public class PlayState extends State {
 					avaX = avaStartX;
 					avaY = avaStartY;
 				}
-				else {
+				else if (!falling) {
 					falling = true;
 				}
 			}
 			if (avaX > 450) {
+				this.avatar.setDirection(Direction.RIGHT);
 				avaX += avaFallSpeed;
-				if (avaX > 490) {
+				avaY -= avaFallSpeed;
+				avaRotation -= 0.5;
+				
+				if (avaX > 490 && avaX < 510) {
+					//generate splash
+				}
+				
+				if (avaX > 510) {
 					avaX = avaStartX;
 					avaY = avaStartY;
+					avaRotation = 0;
 				}
-				else {
+				else if (!falling) {
 					falling = true;
 				}
 			}
@@ -118,11 +137,12 @@ public class PlayState extends State {
 					avaX = avaStartX;
 					avaY = avaStartY;
 				}
-				else {
+				else if (!falling) {
 					falling = true;
 				}
 			}
 			avatar.setCoords(avaX, avaY);
+			avatar.setRotation(avaRotation);
 			this.avatar.setFalling(falling);
 			avatar.update(dt);
 			cam.translate(avaX - cam.position.x, avaY - cam.position.y);
@@ -140,8 +160,9 @@ public class PlayState extends State {
 		sb.draw(ResourceManager.testIsland, 0, 0);
 		
 		if (avatar.isFalling() && (avatar.getDirection() == Direction.LEFT || avatar.getDirection() == Direction.RIGHT)) {
-			sb.draw(avatar.getTexture(), avatar.getX(), avatar.getY(), avaFallWidth, avaFallHeight, 
-					0, 0, avatar.getTexture().getWidth(), avatar.getTexture().getHeight(), true, false);
+			sb.draw(avatar.getTexture(), avatar.getX(), avatar.getY(), avaFallWidth / 2, avaFallHeight / 2,
+					avaFallWidth, avaFallHeight, 1, 1, avatar.getRotation(), 0, 0, avatar.getTexture().getWidth(),
+					avatar.getTexture().getHeight(), false, false);
 		}
 		else {
 			sb.draw(avatar.getTexture(), avatar.getX(), avatar.getY());
