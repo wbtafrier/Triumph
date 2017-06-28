@@ -9,10 +9,13 @@ import com.mygdx.game.AnimationManager;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.ResourceManager;
 import com.mygdx.game.avatar.Avatar;
+import com.mygdx.game.entity.SplashMonitor;
+import com.mygdx.game.entity.WaterSplash;
 import com.mygdx.game.util.Direction;
 
 public class PlayState extends State {
 	Avatar avatar;
+	SplashMonitor splashMonitor;
 	Texture currentWater;
 	float avaX, avaY, avaRotation, dt, time = 0;
 	final float avaStartX, avaStartY, avaFallSpeed = 1.25f;
@@ -31,6 +34,7 @@ public class PlayState extends State {
 		avatar.setX(avaStartX);
 		avaStartY = ResourceManager.testIsland.getHeight() / 2;
 		avatar.setY(avaStartY);
+		splashMonitor = new SplashMonitor();
 		currentWater = ResourceManager.water1;
 	}
 
@@ -90,7 +94,9 @@ public class PlayState extends State {
 				avaRotation += 0.5;
 				
 				if (avaX < -18 && avaX > -38) {
-					//generate splash
+					/* splash testing code */
+					WaterSplash s = new WaterSplash(avaX - 40, avaY + 40);
+					splashMonitor.add(s, SplashMonitor.BACKGROUND);
 				}
 				
 				if (avaX < -38) {
@@ -119,7 +125,9 @@ public class PlayState extends State {
 				avaRotation -= 0.5;
 				
 				if (avaX > 490 && avaX < 510) {
-					//generate splash
+					/* splash testing code */
+					WaterSplash s = new WaterSplash(avaX + 40, avaY - 40);
+					splashMonitor.add(s, SplashMonitor.BACKGROUND);
 				}
 				
 				if (avaX > 510) {
@@ -145,6 +153,7 @@ public class PlayState extends State {
 			avatar.setRotation(avaRotation);
 			this.avatar.setFalling(falling);
 			avatar.update(dt);
+			splashMonitor.update(dt);
 			cam.translate(avaX - cam.position.x, avaY - cam.position.y);
 		}
 
@@ -158,6 +167,8 @@ public class PlayState extends State {
 		sb.begin();
 		sb.draw(this.currentWater, waterX, waterY, waterWidth, waterHeight);
 		sb.draw(ResourceManager.testIsland, 0, 0);
+
+		splashMonitor.render(sb, SplashMonitor.BACKGROUND);
 		
 		if (avatar.isFalling() && (avatar.getDirection() == Direction.LEFT || avatar.getDirection() == Direction.RIGHT)) {
 			sb.draw(avatar.getTexture(), avatar.getX(), avatar.getY(), avaFallWidth / 2, avaFallHeight / 2,
@@ -167,6 +178,8 @@ public class PlayState extends State {
 		else {
 			sb.draw(avatar.getTexture(), avatar.getX(), avatar.getY());
 		}
+		
+		splashMonitor.render(sb, SplashMonitor.FOREGROUND);
 		
 		BitmapFont font = new BitmapFont();
 		String x = Integer.toString((int)avatar.getX());

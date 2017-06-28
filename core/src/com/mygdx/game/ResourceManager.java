@@ -28,6 +28,12 @@ public class ResourceManager {
 	public static Texture frontFall;
 	public static Texture leftFall;
 	public static Texture rightFall;
+	public static Texture waterSplash1;
+	public static Texture waterSplash2;
+	public static Texture waterSplash3;
+	public static Texture waterSplash4;
+	public static Texture waterSplash5;
+	public static Texture waterSplash6;
 	
 	public static void initializeTextures() {
 		textureList.add(back = new Texture("back.png"));
@@ -51,6 +57,12 @@ public class ResourceManager {
 		textureList.add(frontFall = new Texture("frontFall.png"));
 		textureList.add(leftFall = new Texture("leftFall.png"));
 		textureList.add(rightFall = new Texture("rightFall.png"));
+		textureList.add(waterSplash1 = new Texture("waterSplash1.png"));
+		textureList.add(waterSplash2 = new Texture("waterSplash2.png"));
+		textureList.add(waterSplash3 = new Texture("waterSplash3.png"));
+		textureList.add(waterSplash4 = new Texture("waterSplash4.png"));
+		textureList.add(waterSplash5 = new Texture("waterSplash5.png"));
+		textureList.add(waterSplash6 = new Texture("waterSplash6.png"));
 	}
 	
 	public static ArrayList<Texture> getTextureList() {
