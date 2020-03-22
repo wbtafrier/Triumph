@@ -10,7 +10,8 @@ public class Avatar {
 	private Texture texture;
 	private Direction direction = Direction.DOWN;
 	private float x = 0, y = 0, rotation = 0, time = 0f, speed = 60f;
-	private boolean moving = false, falling = false;
+	private int wallet = 500;
+	private boolean moving = false, falling = false, jumping = false;
 	
 	public Avatar(Texture t) {
 		this.texture = t;
@@ -19,30 +20,30 @@ public class Avatar {
 	public void update(float dt) {
 		this.time += dt;
 		if (this.direction.equals(Direction.LEFT)) {
-			if (this.moving && !this.falling)
+			if (this.moving && !this.falling && !this.jumping)
 				this.texture = AnimationManager.leftWalk.getKeyFrame(this.time, true);
-			else if (this.falling)
+			else if (this.falling || this.jumping)
 				this.texture = ResourceManager.leftFall;
 			else
 				this.texture = ResourceManager.left;
 		} else if (this.direction.equals(Direction.RIGHT)) {
-			if (this.moving && !this.falling)
+			if (this.moving && !this.falling && !this.jumping)
 				this.texture = AnimationManager.rightWalk.getKeyFrame(this.time, true);
-			else if (this.falling)
+			else if (this.falling || this.jumping)
 				this.texture = ResourceManager.rightFall;
 			else
 				this.texture = ResourceManager.right;
 		} else if (this.direction.equals(Direction.DOWN)) {
-			if (this.moving && !this.falling)
+			if (this.moving && !this.falling && !this.jumping)
 				this.texture = AnimationManager.frontWalk.getKeyFrame(this.time, true);
-			else if (this.falling)
+			else if (this.falling || this.jumping)
 				this.texture = ResourceManager.frontFall;
 			else
 				this.texture = ResourceManager.front;
 		} else if (this.direction.equals(Direction.UP)) {
-			if (this.moving && !this.falling)
+			if (this.moving && !this.falling && !this.jumping)
 				this.texture = AnimationManager.backWalk.getKeyFrame(this.time, true);
-			else if (this.falling)
+			else if (this.falling || this.jumping)
 				this.texture = ResourceManager.backFall;
 			else
 				this.texture = ResourceManager.back;
@@ -116,5 +117,21 @@ public class Avatar {
 	
 	public boolean isFalling() {
 		return this.falling;
+	}
+
+	public void setJumping(boolean jumping) {
+		this.jumping = jumping;
+	}
+
+	public boolean isJumping() {
+		return this.jumping;
+	}
+	
+	public void setWallet(int w) {
+		this.wallet = w;
+	}
+
+	public int getWallet() {
+		return this.wallet;
 	}
 }

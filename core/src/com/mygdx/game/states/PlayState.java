@@ -41,6 +41,7 @@ public class PlayState extends State {
 	@Override
 	protected void handleInput() {
 		boolean moving = false;
+		boolean jumping = false;
 		
 		if (Gdx.input.isKeyPressed(Keys.ESCAPE)) {
 			gsm.set(new MenuState(gsm));
@@ -67,6 +68,10 @@ public class PlayState extends State {
 				avatar.setDirection(Direction.DOWN);
 				avaY -= dt * avatar.getSpeed();
 				moving = true;
+			}
+			if (Gdx.input.isKeyPressed(Keys.SPACE)) {
+				//please finish this... coords need implementation and graphics are bugged.
+				jumping = true;
 			}
 		}
 		else {
@@ -95,7 +100,7 @@ public class PlayState extends State {
 				
 				if (avaX < -18 && avaX > -38) {
 					/* splash testing code */
-					WaterSplash s = new WaterSplash(avaX - 40, avaY + 40);
+					WaterSplash s = new WaterSplash(avaX, avaY - 5);
 					splashMonitor.add(s, SplashMonitor.BACKGROUND);
 				}
 				
@@ -126,7 +131,7 @@ public class PlayState extends State {
 				
 				if (avaX > 490 && avaX < 510) {
 					/* splash testing code */
-					WaterSplash s = new WaterSplash(avaX + 40, avaY - 40);
+					WaterSplash s = new WaterSplash(avaX, avaY - 5);
 					splashMonitor.add(s, SplashMonitor.BACKGROUND);
 				}
 				
