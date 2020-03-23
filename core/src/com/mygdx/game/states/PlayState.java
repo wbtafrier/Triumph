@@ -41,7 +41,6 @@ public class PlayState extends State {
 	@Override
 	protected void handleInput() {
 		boolean moving = false;
-		boolean jumping = false;
 		
 		if (Gdx.input.isKeyPressed(Keys.ESCAPE)) {
 			gsm.set(new MenuState(gsm));
@@ -68,10 +67,6 @@ public class PlayState extends State {
 				avatar.setDirection(Direction.DOWN);
 				avaY -= dt * avatar.getSpeed();
 				moving = true;
-			}
-			if (Gdx.input.isKeyPressed(Keys.SPACE)) {
-				//please finish this... coords need implementation and graphics are bugged.
-				jumping = true;
 			}
 		}
 		else {
