@@ -17,6 +17,7 @@ public class PlayState extends State {
 	Avatar avatar;
 	SplashMonitor splashMonitor;
 	Texture currentWater;
+	boolean stats = false;
 	float avaX, avaY, avaRotation, dt, time = 0;
 	final float avaStartX, avaStartY, avaFallSpeed = 1.25f;
 	final float waterWidth = ResourceManager.water1.getWidth() * 1.15f,
@@ -42,9 +43,23 @@ public class PlayState extends State {
 	protected void handleInput() {
 		boolean moving = false;
 		
-		if (Gdx.input.isKeyPressed(Keys.ESCAPE)) {
+		/*
+		 * isKeyPressed VERSUS isKeyJustPressed
+		 * 
+		 * isKeyPressed:
+		 * 		detects whether the key is currently pressed.
+		 * isKeyJustPressed:
+		 * 		detects whether the key was pressed and released the last frame.
+		 * 
+		 */
+		
+		if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
 			gsm.set(new MenuState(gsm));
 			return;
+		}
+		
+		if (Gdx.input.isKeyJustPressed(Keys.F5)) {
+			this.stats = !stats;
 		}
 		
 		if (!avatar.isFalling()) {
@@ -182,10 +197,15 @@ public class PlayState extends State {
 		splashMonitor.render(sb, SplashMonitor.FOREGROUND);
 		
 		BitmapFont font = new BitmapFont();
-		String x = Integer.toString((int)avatar.getX());
-		String y = Integer.toString((int)avatar.getY());
-		font.draw(sb, x + ", " + y, cam.position.x - (cam.viewportWidth / 2) + 10,
-				cam.position.y - (cam.viewportHeight / 2) + 30);
+		if (this.stats) {
+			String x = Integer.toString((int)avatar.getX());
+			String y = Integer.toString((int)avatar.getY());
+			font.draw(sb, x + ", " + y, cam.position.x - (cam.viewportWidth / 2) + 10,
+					cam.position.y + (cam.viewportHeight / 2) - 10);
+		}
+		
+		String w = Integer.toString((int)avatar.getWallet());
+		font.draw(sb, w, cam.position.x - (cam.viewportWidth / 2) + 10, cam.position.y - (cam.viewportHeight / 2) + 30);
 		
 		sb.end();
 	}
