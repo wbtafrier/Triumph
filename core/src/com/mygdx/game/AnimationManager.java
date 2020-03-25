@@ -10,6 +10,8 @@ public class AnimationManager {
 	public static Animation<Texture> backWalk;
 	public static Animation<Texture> frontWalk;
 	public static Animation<Texture> waterFlow;
+	public static Animation<Texture> waterNightFlow;
+	public static Animation<Texture> swordHit;
 
 	public static void initializeAnimations() {
 		Texture[] left = new Texture[] { ResourceManager.left, ResourceManager.leftWalk1, ResourceManager.leftWalk2 };
@@ -27,5 +29,12 @@ public class AnimationManager {
 		Texture[] water = new Texture[] { ResourceManager.water1, ResourceManager.water2, ResourceManager.water3,
 											ResourceManager.water2 };
 		waterFlow = new Animation<Texture>(0.5f, water);
+		
+		Texture[] waterNight = new Texture[] { ResourceManager.water1Night, ResourceManager.water2Night, ResourceManager.water3Night,
+											ResourceManager.water2Night };
+		waterNightFlow = new Animation<Texture>(0.8f, waterNight);
+		
+		Texture[] sword = new Texture[] { ResourceManager.sword1, ResourceManager.sword2 };
+		swordHit = new Animation<Texture>(0.5f, sword);
 	}
 }

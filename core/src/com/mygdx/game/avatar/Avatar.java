@@ -9,9 +9,9 @@ public class Avatar {
 	
 	private Texture texture;
 	private Direction direction = Direction.DOWN;
-	private float x = 0, y = 0, rotation = 0, time = 0f, speed = 60f;
-	private int wallet = 500;
-	private boolean moving = false, falling = false;
+	private float x = 0, y = 0, rotation = 0, time = 0f, speed = 60f, strikeStartTime = 0f;
+	private int health = 500;
+	private boolean moving = false, falling = false, striking = false;
 	
 	public Avatar(Texture t) {
 		this.texture = t;
@@ -19,38 +19,55 @@ public class Avatar {
 	
 	public void update(float dt) {
 		this.time += dt;
-		if (this.direction.equals(Direction.LEFT)) {
-			if (this.moving && !this.falling) {
-				this.texture = AnimationManager.leftWalk.getKeyFrame(this.time, true);
+		if (!this.striking) {
+			if (this.direction.equals(Direction.LEFT)) {
+				if (this.moving && !this.falling) {
+					this.texture = AnimationManager.leftWalk.getKeyFrame(this.time, true);
+				}
+				else if (this.falling) {
+					
+					this.texture = ResourceManager.leftFall;
+				}
+				else
+					this.texture = ResourceManager.left;
+			} else if (this.direction.equals(Direction.RIGHT)) {
+				if (this.moving && !this.falling)
+					this.texture = AnimationManager.rightWalk.getKeyFrame(this.time, true);
+				else if (this.falling)
+					this.texture = ResourceManager.rightFall;
+				else
+					this.texture = ResourceManager.right;
+			} else if (this.direction.equals(Direction.DOWN)) {
+				if (this.moving && !this.falling)
+					this.texture = AnimationManager.frontWalk.getKeyFrame(this.time, true);
+				else if (this.falling)
+					this.texture = ResourceManager.frontFall;
+				else
+					this.texture = ResourceManager.front;
+			} else if (this.direction.equals(Direction.UP)) {
+				if (this.moving && !this.falling)
+					this.texture = AnimationManager.backWalk.getKeyFrame(this.time, true);
+				else if (this.falling)
+					this.texture = ResourceManager.backFall;
+				else
+					this.texture = ResourceManager.back;
 			}
-			else if (this.falling) {
-				
-				this.texture = ResourceManager.leftFall;
-			}
-			else
-				this.texture = ResourceManager.left;
-		} else if (this.direction.equals(Direction.RIGHT)) {
-			if (this.moving && !this.falling)
-				this.texture = AnimationManager.rightWalk.getKeyFrame(this.time, true);
-			else if (this.falling)
-				this.texture = ResourceManager.rightFall;
-			else
-				this.texture = ResourceManager.right;
-		} else if (this.direction.equals(Direction.DOWN)) {
-			if (this.moving && !this.falling)
-				this.texture = AnimationManager.frontWalk.getKeyFrame(this.time, true);
-			else if (this.falling)
-				this.texture = ResourceManager.frontFall;
-			else
-				this.texture = ResourceManager.front;
-		} else if (this.direction.equals(Direction.UP)) {
-			if (this.moving && !this.falling)
-				this.texture = AnimationManager.backWalk.getKeyFrame(this.time, true);
-			else if (this.falling)
-				this.texture = ResourceManager.backFall;
-			else
-				this.texture = ResourceManager.back;
 		}
+		else {
+			if (this.striking && this.strikeStartTime == 0) {
+				this.strikeStartTime = this.time;
+			}
+			else if (AnimationManager.swordHit.isAnimationFinished(time - this.strikeStartTime)) {
+				this.striking = false;
+				this.strikeStartTime = 0;
+			}
+			
+			this.texture = AnimationManager.swordHit.getKeyFrame(time, true);
+		}
+	}
+	
+	public void triggerStrike() {
+		this.striking = true;
 	}
 	
 	public void setDirection(Direction dir) {
@@ -122,11 +139,11 @@ public class Avatar {
 		return this.falling;
 	}
 	
-	public void setWallet(int w) {
-		this.wallet = w;
+	public void setHealth(int h) {
+		this.health = h;
 	}
 
-	public int getWallet() {
-		return this.wallet;
+	public int getHealth() {
+		return this.health;
 	}
 }

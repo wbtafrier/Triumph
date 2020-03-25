@@ -16,9 +16,11 @@ import com.mygdx.game.util.Direction;
 public class PlayState extends State {
 	Avatar avatar;
 	SplashMonitor splashMonitor;
+	Texture currentIsland;
 	Texture currentWater;
-	boolean stats = false;
+	boolean stats = false, night = false;
 	float avaX, avaY, avaRotation, dt, time = 0;
+	int lastSwitchTime = 0;
 	final float avaStartX, avaStartY, avaFallSpeed = 1.25f;
 	final float waterWidth = ResourceManager.water1.getWidth() * 1.15f,
 			waterHeight = ResourceManager.water1.getHeight() * 1.25f,
@@ -36,7 +38,8 @@ public class PlayState extends State {
 		avaStartY = ResourceManager.testIsland.getHeight() / 2;
 		avatar.setY(avaStartY);
 		splashMonitor = new SplashMonitor();
-		currentWater = ResourceManager.water1;
+		currentIsland = !night ? ResourceManager.testIsland : ResourceManager.testIslandNight;
+		currentWater = !night ? ResourceManager.water1 : ResourceManager.water1Night;
 	}
 
 	@Override
@@ -82,6 +85,9 @@ public class PlayState extends State {
 				avatar.setDirection(Direction.DOWN);
 				avaY -= dt * avatar.getSpeed();
 				moving = true;
+			}
+			if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
+				avatar.triggerStrike();
 			}
 		}
 		else {
@@ -172,7 +178,15 @@ public class PlayState extends State {
 			cam.translate(avaX - cam.position.x, avaY - cam.position.y);
 		}
 
-		this.currentWater = AnimationManager.waterFlow.getKeyFrame(time, true);
+		int timeInt = (int)this.time;
+		if (timeInt % 24 == 0 && this.lastSwitchTime != timeInt) {
+			this.lastSwitchTime = timeInt;
+			this.night = !night;
+		}
+		
+		this.currentIsland = !night ? ResourceManager.testIsland : ResourceManager.testIslandNight;
+		this.currentWater = !night ? AnimationManager.waterFlow.getKeyFrame(time, true) : 
+			AnimationManager.waterNightFlow.getKeyFrame(time, true);
 		cam.update();
 	}
 
@@ -181,7 +195,7 @@ public class PlayState extends State {
 		sb.setProjectionMatrix(cam.combined);
 		sb.begin();
 		sb.draw(this.currentWater, waterX, waterY, waterWidth, waterHeight);
-		sb.draw(ResourceManager.testIsland, 0, 0);
+		sb.draw(this.currentIsland, 0, 0);
 
 		splashMonitor.render(sb, SplashMonitor.BACKGROUND);
 		
@@ -200,11 +214,14 @@ public class PlayState extends State {
 		if (this.stats) {
 			String x = Integer.toString((int)avatar.getX());
 			String y = Integer.toString((int)avatar.getY());
+			String t = Float.toString((float)this.time);
 			font.draw(sb, x + ", " + y, cam.position.x - (cam.viewportWidth / 2) + 10,
 					cam.position.y + (cam.viewportHeight / 2) - 10);
+			font.draw(sb, t, cam.position.x - (cam.viewportWidth / 2) + 10,
+					cam.position.y + (cam.viewportHeight / 2) - 30);
 		}
 		
-		String w = Integer.toString((int)avatar.getWallet());
+		String w = Integer.toString((int)avatar.getHealth());
 		font.draw(sb, w, cam.position.x - (cam.viewportWidth / 2) + 10, cam.position.y - (cam.viewportHeight / 2) + 30);
 		
 		sb.end();

@@ -20,9 +20,13 @@ public class ResourceManager {
 	public static Texture rightWalk1;
 	public static Texture rightWalk2;
 	public static Texture testIsland;
+	public static Texture testIslandNight;
 	public static Texture water1;
 	public static Texture water2;
 	public static Texture water3;
+	public static Texture water1Night;
+	public static Texture water2Night;
+	public static Texture water3Night;
 	public static Texture mainMenu;
 	public static Texture backFall;
 	public static Texture frontFall;
@@ -34,6 +38,8 @@ public class ResourceManager {
 	public static Texture waterSplash4;
 	public static Texture waterSplash5;
 	public static Texture waterSplash6;
+	public static Texture sword1;
+	public static Texture sword2;
 	
 	public static void initializeTextures() {
 		textureList.add(back = new Texture("back.png"));
@@ -49,9 +55,13 @@ public class ResourceManager {
 		textureList.add(rightWalk1 = new Texture("rightWalk1.png"));
 		textureList.add(rightWalk2 = new Texture("rightWalk2.png"));
 		textureList.add(testIsland = new Texture("testIsland.png"));
+		textureList.add(testIslandNight = new Texture("testIslandNight.png"));
 		textureList.add(water1 = new Texture("water1.png"));
 		textureList.add(water2 = new Texture("water2.png"));
 		textureList.add(water3 = new Texture("water3.png"));
+		textureList.add(water1Night = new Texture("water1Night.png"));
+		textureList.add(water2Night = new Texture("water2Night.png"));
+		textureList.add(water3Night = new Texture("water3Night.png"));
 		textureList.add(mainMenu = new Texture("mainMenu.png"));
 		textureList.add(backFall = new Texture("backFall.png"));
 		textureList.add(frontFall = new Texture("frontFall.png"));
@@ -63,6 +73,8 @@ public class ResourceManager {
 		textureList.add(waterSplash4 = new Texture("waterSplash4.png"));
 		textureList.add(waterSplash5 = new Texture("waterSplash5.png"));
 		textureList.add(waterSplash6 = new Texture("waterSplash6.png"));
+		textureList.add(sword1 = new Texture("sword1.png"));
+		textureList.add(sword2 = new Texture("sword2.png"));
 	}
 	
 	public static ArrayList<Texture> getTextureList() {
