@@ -228,7 +228,7 @@ public class PlayState extends State {
 		}
 		
 		String h = Integer.toString((int)player.getHealth());
-		font.draw(sb, h, cam.position.x - (cam.viewportWidth / 2) + 10, cam.position.y - (cam.viewportHeight / 2) + 30);
+		font.draw(sb, h, player.getX(), player.getY() + Avatar.fallHeight + 20);
 		
 		h = Integer.toString((int)knight.getHealth());
 		font.draw(sb, h, knight.getX(), knight.getY() + Avatar.fallHeight + 20);
