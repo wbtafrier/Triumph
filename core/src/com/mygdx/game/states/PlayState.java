@@ -2,44 +2,45 @@ package com.mygdx.game.states;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.mygdx.game.AnimationManager;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.ResourceManager;
 import com.mygdx.game.avatar.Avatar;
+import com.mygdx.game.entity.Knight;
 import com.mygdx.game.entity.SplashMonitor;
 import com.mygdx.game.entity.WaterSplash;
+import com.mygdx.game.map.TestIsland;
+import com.mygdx.game.util.DayNight;
 import com.mygdx.game.util.Direction;
 
 public class PlayState extends State {
+	DayNight dayNight;
 	Avatar avatar;
+	Knight knight;
 	SplashMonitor splashMonitor;
-	Texture currentIsland;
-	Texture currentWater;
-	boolean stats = false, night = false;
+	TestIsland island;
+	boolean stats = false;
 	float avaX, avaY, avaRotation, dt, time = 0;
-	int lastSwitchTime = 0;
+	float knightX, knightY;
 	final float avaStartX, avaStartY, avaFallSpeed = 1.25f;
-	final float waterWidth = ResourceManager.water1.getWidth() * 1.15f,
-			waterHeight = ResourceManager.water1.getHeight() * 1.25f,
-			waterX = -((waterWidth - ResourceManager.testIsland.getWidth()) / 2),
-			waterY = -((waterHeight - ResourceManager.testIsland.getHeight()) / 2),
-			avaFallWidth = ResourceManager.frontFall.getWidth(),
+	final float avaFallWidth = ResourceManager.frontFall.getWidth(),
 			avaFallHeight = ResourceManager.frontFall.getHeight();
 
 	public PlayState(GameStateManager gsm) {
 		super(gsm);
 		cam.setToOrtho(false, MyGdxGame.WIDTH / 3, MyGdxGame.HEIGHT / 3);
+		dayNight = new DayNight(DayNight.DAY);
 		avatar = new Avatar(ResourceManager.front);
 		avaStartX = ResourceManager.testIsland.getWidth() / 2;
 		avatar.setX(avaStartX);
 		avaStartY = ResourceManager.testIsland.getHeight() / 2;
 		avatar.setY(avaStartY);
 		splashMonitor = new SplashMonitor();
-		currentIsland = !night ? ResourceManager.testIsland : ResourceManager.testIslandNight;
-		currentWater = !night ? ResourceManager.water1 : ResourceManager.water1Night;
+		island = new TestIsland(dayNight.isNight());
+		
+		knight = new Knight(ResourceManager.front);
+		knight.setCoords(avaStartX, avaStartY);
 	}
 
 	@Override
@@ -95,10 +96,79 @@ public class PlayState extends State {
 		}
 		avatar.setMoving(moving);
 	}
+	
+	public boolean checkAndHandleFalls(float dt) {
+		boolean falling = false;
+		
+		if (avaX < TestIsland.WEST_BEACH) {
+			this.avatar.setDirection(Direction.LEFT);
+			avaX -= avaFallSpeed;
+			avaY -= avaFallSpeed;
+			avaRotation += 0.5;
+			
+			if (avaX < TestIsland.WEST_SHORE && avaX > TestIsland.WEST_EDGE) {
+				/* splash testing code */
+				WaterSplash s = new WaterSplash(avaX, avaY - 5);
+				splashMonitor.add(s, SplashMonitor.BACKGROUND);
+			}
+			
+			if (avaX < TestIsland.WEST_EDGE) {
+				avaX = avaStartX;
+				avaY = avaStartY;
+				avaRotation = 0;
+			}
+			else if (!falling) {
+				falling = true;
+			}
+		}
+		if (avaY < TestIsland.SOUTH_BEACH) {
+			avaY -= avaFallSpeed;
+			if (avaY < TestIsland.SOUTH_SHORE) {
+				avaX = avaStartX;
+				avaY = avaStartY;
+			}
+			else if (!falling) {
+				falling = true;
+			}
+		}
+		if (avaX > TestIsland.EAST_BEACH) {
+			this.avatar.setDirection(Direction.RIGHT);
+			avaX += avaFallSpeed;
+			avaY -= avaFallSpeed;
+			avaRotation -= 0.5;
+			
+			if (avaX > TestIsland.EAST_SHORE && avaX < TestIsland.EAST_EDGE) {
+				/* splash testing code */
+				WaterSplash s = new WaterSplash(avaX, avaY - 5);
+				splashMonitor.add(s, SplashMonitor.BACKGROUND);
+			}
+			
+			if (avaX > TestIsland.EAST_EDGE) {
+				avaX = avaStartX;
+				avaY = avaStartY;
+				avaRotation = 0;
+			}
+			else if (!falling) {
+				falling = true;
+			}
+		}
+		if (avaY > TestIsland.NORTH_BEACH) {
+			avaY += avaFallSpeed;
+			if (avaY > TestIsland.NORTH_SHORE) {
+				avaX = avaStartX;
+				avaY = avaStartY;
+			}
+			else if (!falling) {
+				falling = true;
+			}
+		}
+		
+		return falling;
+	}
 
 	@Override
 	public void update(float dt) {
-		boolean falling = false;
+		boolean falling;
 		
 		this.dt = dt;
 		this.time += dt;
@@ -108,68 +178,7 @@ public class PlayState extends State {
 			this.avaY = this.avatar.getY();
 			this.avaRotation = this.avatar.getRotation();
 			handleInput();
-			if (avaX < 22) {
-				this.avatar.setDirection(Direction.LEFT);
-				avaX -= avaFallSpeed;
-				avaY -= avaFallSpeed;
-				avaRotation += 0.5;
-				
-				if (avaX < -18 && avaX > -38) {
-					/* splash testing code */
-					WaterSplash s = new WaterSplash(avaX, avaY - 5);
-					splashMonitor.add(s, SplashMonitor.BACKGROUND);
-				}
-				
-				if (avaX < -38) {
-					avaX = avaStartX;
-					avaY = avaStartY;
-					avaRotation = 0;
-				}
-				else if (!falling) {
-					falling = true;
-				}
-			}
-			if (avaY < 40) {
-				avaY -= avaFallSpeed;
-				if (avaY < -15) {
-					avaX = avaStartX;
-					avaY = avaStartY;
-				}
-				else if (!falling) {
-					falling = true;
-				}
-			}
-			if (avaX > 450) {
-				this.avatar.setDirection(Direction.RIGHT);
-				avaX += avaFallSpeed;
-				avaY -= avaFallSpeed;
-				avaRotation -= 0.5;
-				
-				if (avaX > 490 && avaX < 510) {
-					/* splash testing code */
-					WaterSplash s = new WaterSplash(avaX, avaY - 5);
-					splashMonitor.add(s, SplashMonitor.BACKGROUND);
-				}
-				
-				if (avaX > 510) {
-					avaX = avaStartX;
-					avaY = avaStartY;
-					avaRotation = 0;
-				}
-				else if (!falling) {
-					falling = true;
-				}
-			}
-			if (avaY > 370) {
-				avaY += avaFallSpeed;
-				if (avaY > 405) {
-					avaX = avaStartX;
-					avaY = avaStartY;
-				}
-				else if (!falling) {
-					falling = true;
-				}
-			}
+			falling = checkAndHandleFalls(dt);
 			avatar.setCoords(avaX, avaY);
 			avatar.setRotation(avaRotation);
 			this.avatar.setFalling(falling);
@@ -177,16 +186,16 @@ public class PlayState extends State {
 			splashMonitor.update(dt);
 			cam.translate(avaX - cam.position.x, avaY - cam.position.y);
 		}
-
-		int timeInt = (int)this.time;
-		if (timeInt % 24 == 0 && this.lastSwitchTime != timeInt) {
-			this.lastSwitchTime = timeInt;
-			this.night = !night;
+		
+		if (knight != null) {
+			this.knightX = this.knight.getX();
+			this.knightY = this.knight.getY();
+			knight.update(dt);
 		}
 		
-		this.currentIsland = !night ? ResourceManager.testIsland : ResourceManager.testIslandNight;
-		this.currentWater = !night ? AnimationManager.waterFlow.getKeyFrame(time, true) : 
-			AnimationManager.waterNightFlow.getKeyFrame(time, true);
+		dayNight.update(time);
+		island.update(time, dayNight.isNight());
+		
 		cam.update();
 	}
 
@@ -194,8 +203,7 @@ public class PlayState extends State {
 	public void render(SpriteBatch sb) {
 		sb.setProjectionMatrix(cam.combined);
 		sb.begin();
-		sb.draw(this.currentWater, waterX, waterY, waterWidth, waterHeight);
-		sb.draw(this.currentIsland, 0, 0);
+		island.render(sb);
 
 		splashMonitor.render(sb, SplashMonitor.BACKGROUND);
 		
@@ -207,6 +215,8 @@ public class PlayState extends State {
 		else {
 			sb.draw(avatar.getTexture(), avatar.getX(), avatar.getY());
 		}
+		
+		sb.draw(knight.getTexture(), knight.getX(), knight.getY());
 		
 		splashMonitor.render(sb, SplashMonitor.FOREGROUND);
 		
