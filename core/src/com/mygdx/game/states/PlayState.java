@@ -9,38 +9,27 @@ import com.mygdx.game.ResourceManager;
 import com.mygdx.game.avatar.Avatar;
 import com.mygdx.game.entity.Knight;
 import com.mygdx.game.entity.SplashMonitor;
-import com.mygdx.game.entity.WaterSplash;
 import com.mygdx.game.map.TestIsland;
 import com.mygdx.game.util.DayNight;
 import com.mygdx.game.util.Direction;
 
 public class PlayState extends State {
 	DayNight dayNight;
-	Avatar avatar;
+	Avatar player;
 	Knight knight;
-	SplashMonitor splashMonitor;
 	TestIsland island;
 	boolean stats = false;
-	float avaX, avaY, avaRotation, dt, time = 0;
-	float knightX, knightY;
-	final float avaStartX, avaStartY, avaFallSpeed = 1.25f;
-	final float avaFallWidth = ResourceManager.frontFall.getWidth(),
-			avaFallHeight = ResourceManager.frontFall.getHeight();
+	float dt, time = 0;
 
 	public PlayState(GameStateManager gsm) {
 		super(gsm);
 		cam.setToOrtho(false, MyGdxGame.WIDTH / 3, MyGdxGame.HEIGHT / 3);
 		dayNight = new DayNight(DayNight.DAY);
-		avatar = new Avatar(ResourceManager.front);
-		avaStartX = ResourceManager.testIsland.getWidth() / 2;
-		avatar.setX(avaStartX);
-		avaStartY = ResourceManager.testIsland.getHeight() / 2;
-		avatar.setY(avaStartY);
-		splashMonitor = new SplashMonitor();
+		player = new Avatar(ResourceManager.front);
 		island = new TestIsland(dayNight.isNight());
 		
 		knight = new Knight(ResourceManager.front);
-		knight.setCoords(avaStartX, avaStartY);
+		knight.setCoords(TestIsland.randomX(), TestIsland.randomY());
 	}
 
 	@Override
@@ -66,97 +55,89 @@ public class PlayState extends State {
 			this.stats = !stats;
 		}
 		
-		if (!avatar.isFalling()) {
+		if (!player.isFalling()) {
 			if (Gdx.input.isKeyPressed(Keys.DPAD_LEFT) || Gdx.input.isKeyPressed(Keys.A)) {
-				avatar.setDirection(Direction.LEFT);
-				avaX -= dt * avatar.getSpeed();
+				player.setDirection(Direction.LEFT);
+				player.subX(dt * player.getSpeed());
 				moving = true;
 			}
 			if (Gdx.input.isKeyPressed(Keys.DPAD_RIGHT) || Gdx.input.isKeyPressed(Keys.D)) {
-				avatar.setDirection(Direction.RIGHT);
-				avaX += dt * avatar.getSpeed();
+				player.setDirection(Direction.RIGHT);
+				player.addX(dt * player.getSpeed());
 				moving = true;
 			}
 			if (Gdx.input.isKeyPressed(Keys.DPAD_UP) || Gdx.input.isKeyPressed(Keys.W)) {
-				avatar.setDirection(Direction.UP);
-				avaY += dt * avatar.getSpeed();
+				player.setDirection(Direction.UP);
+				player.addY(dt * player.getSpeed());
 				moving = true;
 			}
 			if (Gdx.input.isKeyPressed(Keys.DPAD_DOWN) || Gdx.input.isKeyPressed(Keys.S)) {
-				avatar.setDirection(Direction.DOWN);
-				avaY -= dt * avatar.getSpeed();
+				player.setDirection(Direction.DOWN);
+				player.subY(dt * player.getSpeed());
 				moving = true;
 			}
 			if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
-				avatar.triggerStrike();
+				player.triggerStrike();
 			}
 		}
 		else {
 			moving = true;
 		}
-		avatar.setMoving(moving);
+		player.setMoving(moving);
 	}
 	
-	public boolean checkAndHandleFalls(float dt) {
+	public boolean checkAndHandleFalls(Avatar avatar, float dt) {
 		boolean falling = false;
 		
-		if (avaX < TestIsland.WEST_BEACH) {
-			this.avatar.setDirection(Direction.LEFT);
-			avaX -= avaFallSpeed;
-			avaY -= avaFallSpeed;
-			avaRotation += 0.5;
+		if (avatar.getX() < TestIsland.WEST_BEACH) {
+			avatar.setDirection(Direction.LEFT);
+			avatar.subX(avatar.getFallSpeed());
+			avatar.subY(avatar.getFallSpeed());
+			avatar.addRotation(0.5f);
 			
-			if (avaX < TestIsland.WEST_SHORE && avaX > TestIsland.WEST_EDGE) {
+			if (avatar.getX() < TestIsland.WEST_SHORE && avatar.getX() > TestIsland.WEST_EDGE) {
 				/* splash testing code */
-				WaterSplash s = new WaterSplash(avaX, avaY - 5);
-				splashMonitor.add(s, SplashMonitor.BACKGROUND);
+				avatar.addSplashToMonitor(avatar.getX(), avatar.getY() - 5);
 			}
 			
-			if (avaX < TestIsland.WEST_EDGE) {
-				avaX = avaStartX;
-				avaY = avaStartY;
-				avaRotation = 0;
+			if (avatar.getX() < TestIsland.WEST_EDGE) {
+				avatar.reset();
 			}
 			else if (!falling) {
 				falling = true;
 			}
 		}
-		if (avaY < TestIsland.SOUTH_BEACH) {
-			avaY -= avaFallSpeed;
-			if (avaY < TestIsland.SOUTH_SHORE) {
-				avaX = avaStartX;
-				avaY = avaStartY;
+		if (avatar.getY() < TestIsland.SOUTH_BEACH) {
+			avatar.subY(avatar.getFallSpeed());
+			if (avatar.getY() < TestIsland.SOUTH_SHORE) {
+				avatar.reset();
 			}
 			else if (!falling) {
 				falling = true;
 			}
 		}
-		if (avaX > TestIsland.EAST_BEACH) {
-			this.avatar.setDirection(Direction.RIGHT);
-			avaX += avaFallSpeed;
-			avaY -= avaFallSpeed;
-			avaRotation -= 0.5;
+		if (avatar.getX() > TestIsland.EAST_BEACH) {
+			avatar.setDirection(Direction.RIGHT);
+			avatar.addX(avatar.getFallSpeed());
+			avatar.subY(avatar.getFallSpeed());
+			avatar.subRotation(0.5f);
 			
-			if (avaX > TestIsland.EAST_SHORE && avaX < TestIsland.EAST_EDGE) {
+			if (avatar.getX() > TestIsland.EAST_SHORE && avatar.getX() < TestIsland.EAST_EDGE) {
 				/* splash testing code */
-				WaterSplash s = new WaterSplash(avaX, avaY - 5);
-				splashMonitor.add(s, SplashMonitor.BACKGROUND);
+				avatar.addSplashToMonitor(avatar.getX(), avatar.getY() - 5);
 			}
 			
-			if (avaX > TestIsland.EAST_EDGE) {
-				avaX = avaStartX;
-				avaY = avaStartY;
-				avaRotation = 0;
+			if (avatar.getX() > TestIsland.EAST_EDGE) {
+				avatar.reset();
 			}
 			else if (!falling) {
 				falling = true;
 			}
 		}
-		if (avaY > TestIsland.NORTH_BEACH) {
-			avaY += avaFallSpeed;
-			if (avaY > TestIsland.NORTH_SHORE) {
-				avaX = avaStartX;
-				avaY = avaStartY;
+		if (avatar.getY() > TestIsland.NORTH_BEACH) {
+			avatar.addY(avatar.getFallSpeed());
+			if (avatar.getY() > TestIsland.NORTH_SHORE) {
+				avatar.reset();
 			}
 			else if (!falling) {
 				falling = true;
@@ -173,23 +154,27 @@ public class PlayState extends State {
 		this.dt = dt;
 		this.time += dt;
 		
-		if (avatar != null) {
-			this.avaX = this.avatar.getX();
-			this.avaY = this.avatar.getY();
-			this.avaRotation = this.avatar.getRotation();
+		if (player != null) {
 			handleInput();
-			falling = checkAndHandleFalls(dt);
-			avatar.setCoords(avaX, avaY);
-			avatar.setRotation(avaRotation);
-			this.avatar.setFalling(falling);
-			avatar.update(dt);
-			splashMonitor.update(dt);
-			cam.translate(avaX - cam.position.x, avaY - cam.position.y);
+			falling = checkAndHandleFalls(player, dt);
+			this.player.setFalling(falling);
+			player.update(dt);
+			cam.translate(player.getX() - cam.position.x, player.getY() - cam.position.y);
 		}
 		
 		if (knight != null) {
-			this.knightX = this.knight.getX();
-			this.knightY = this.knight.getY();
+			if (Math.abs(player.getX() - knight.getX()) < 25 && Math.abs(player.getY() - knight.getY()) < 25) {
+				knight.triggerStrike();
+				player.changeHealth(-1);
+			}
+			else if (knight.isStriking()) {
+				knight.stopStriking();
+			}
+			
+			knight.updateAI(dt);
+			falling = checkAndHandleFalls(knight, dt);
+			knight.setFalling(falling);
+			
 			knight.update(dt);
 		}
 		
@@ -205,25 +190,36 @@ public class PlayState extends State {
 		sb.begin();
 		island.render(sb);
 
-		splashMonitor.render(sb, SplashMonitor.BACKGROUND);
+		player.getSplashMonitor().render(sb, SplashMonitor.BACKGROUND);
 		
-		if (avatar.isFalling() && (avatar.getDirection() == Direction.LEFT || avatar.getDirection() == Direction.RIGHT)) {
-			sb.draw(avatar.getTexture(), avatar.getX(), avatar.getY(), avaFallWidth / 2, avaFallHeight / 2,
-					avaFallWidth, avaFallHeight, 1, 1, avatar.getRotation(), 0, 0, avatar.getTexture().getWidth(),
-					avatar.getTexture().getHeight(), false, false);
+		if (player.isFalling() && (player.getDirection() == Direction.LEFT || player.getDirection() == Direction.RIGHT)) {
+			sb.draw(player.getTexture(), player.getX(), player.getY(), Avatar.fallWidth / 2, Avatar.fallHeight / 2,
+					Avatar.fallWidth, Avatar.fallHeight, 1, 1, player.getRotation(), 0, 0, player.getTexture().getWidth(),
+					player.getTexture().getHeight(), false, false);
 		}
 		else {
-			sb.draw(avatar.getTexture(), avatar.getX(), avatar.getY());
+			sb.draw(player.getTexture(), player.getX(), player.getY());
 		}
 		
-		sb.draw(knight.getTexture(), knight.getX(), knight.getY());
+		player.getSplashMonitor().render(sb, SplashMonitor.FOREGROUND);
 		
-		splashMonitor.render(sb, SplashMonitor.FOREGROUND);
+		knight.getSplashMonitor().render(sb, SplashMonitor.BACKGROUND);
+		
+		if (knight.isFalling() && (knight.getDirection() == Direction.LEFT || knight.getDirection() == Direction.RIGHT)) {
+			sb.draw(knight.getTexture(), knight.getX(), knight.getY(), Avatar.fallWidth / 2, Avatar.fallHeight / 2,
+					Avatar.fallWidth, Avatar.fallHeight, 1, 1, knight.getRotation(), 0, 0, knight.getTexture().getWidth(),
+					knight.getTexture().getHeight(), false, false);
+		}
+		else {
+			sb.draw(knight.getTexture(), knight.getX(), knight.getY());
+		}
+		
+		knight.getSplashMonitor().render(sb, SplashMonitor.FOREGROUND);
 		
 		BitmapFont font = new BitmapFont();
 		if (this.stats) {
-			String x = Integer.toString((int)avatar.getX());
-			String y = Integer.toString((int)avatar.getY());
+			String x = Integer.toString((int)player.getX());
+			String y = Integer.toString((int)player.getY());
 			String t = Float.toString((float)this.time);
 			font.draw(sb, x + ", " + y, cam.position.x - (cam.viewportWidth / 2) + 10,
 					cam.position.y + (cam.viewportHeight / 2) - 10);
@@ -231,8 +227,11 @@ public class PlayState extends State {
 					cam.position.y + (cam.viewportHeight / 2) - 30);
 		}
 		
-		String w = Integer.toString((int)avatar.getHealth());
-		font.draw(sb, w, cam.position.x - (cam.viewportWidth / 2) + 10, cam.position.y - (cam.viewportHeight / 2) + 30);
+		String h = Integer.toString((int)player.getHealth());
+		font.draw(sb, h, cam.position.x - (cam.viewportWidth / 2) + 10, cam.position.y - (cam.viewportHeight / 2) + 30);
+		
+		h = Integer.toString((int)knight.getHealth());
+		font.draw(sb, h, knight.getX(), knight.getY() + Avatar.fallHeight + 20);
 		
 		sb.end();
 	}

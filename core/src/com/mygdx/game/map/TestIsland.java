@@ -1,5 +1,7 @@
 package com.mygdx.game.map;
 
+import java.util.Random;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.AnimationManager;
@@ -23,6 +25,8 @@ public class TestIsland {
 			waterX = -((waterWidth - ResourceManager.testIsland.getWidth()) / 2),
 			waterY = -((waterHeight - ResourceManager.testIsland.getHeight()) / 2);
 	
+	static Random rand = new Random();
+	
 	public TestIsland(boolean night) {
 		currentIsland = !night ? ResourceManager.testIsland : ResourceManager.testIslandNight;
 		currentWater = !night ? ResourceManager.water1 : ResourceManager.water1Night;
@@ -37,6 +41,18 @@ public class TestIsland {
 	public void render(SpriteBatch sb) {
 		sb.draw(this.currentWater, waterX, waterY, waterWidth, waterHeight);
 		sb.draw(this.currentIsland, 0, 0);
+	}
+	
+	public static int randomX() {
+		int r = rand.nextInt(EAST_BEACH - WEST_BEACH);
+		
+		return r + WEST_BEACH;
+	}
+	
+	public static int randomY() {
+		int r = rand.nextInt(NORTH_BEACH - SOUTH_BEACH);
+		
+		return r + SOUTH_BEACH;
 	}
 	
 }
