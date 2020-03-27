@@ -156,6 +156,14 @@ public class PlayState extends State {
 		
 		if (player != null) {
 			handleInput();
+			if (player.isStriking() && Math.abs(player.getX() - knight.getX()) < 25 && Math.abs(player.getY() - knight.getY()) < 25) {
+				knight.changeHealth(-1);
+				knight.setUnderAttack(true);
+			}
+			else if (knight.isUnderAttack()) {
+				knight.setUnderAttack(false);
+			}
+			
 			falling = checkAndHandleFalls(player, dt);
 			this.player.setFalling(falling);
 			player.update(dt);
@@ -166,9 +174,11 @@ public class PlayState extends State {
 			if (Math.abs(player.getX() - knight.getX()) < 25 && Math.abs(player.getY() - knight.getY()) < 25) {
 				knight.triggerStrike();
 				player.changeHealth(-1);
+				player.setUnderAttack(true);
 			}
 			else if (knight.isStriking()) {
 				knight.stopStriking();
+				player.setUnderAttack(false);
 			}
 			
 			knight.updateAI(dt);

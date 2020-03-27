@@ -13,7 +13,7 @@ public class Avatar {
 	private Direction direction = Direction.DOWN;
 	private float x = 0, y = 0, rotation = 0, time = 0f, speed = 60f, strikeStartTime = 0f;
 	private int health = 500;
-	private boolean moving = false, falling = false, striking = false;
+	private boolean moving = false, falling = false, striking = false, underAttack = false;
 	SplashMonitor splashMonitor;
 	final float startX, startY;
 	float fallSpeed = 1.25f;
@@ -91,6 +91,14 @@ public class Avatar {
 	
 	public void stopStriking() {
 		this.striking = false;
+	}
+	
+	public void setUnderAttack(boolean a) {
+		this.underAttack = a;
+	}
+	
+	public boolean isUnderAttack() {
+		return this.underAttack;
 	}
 	
 	public void setDirection(Direction dir) {
